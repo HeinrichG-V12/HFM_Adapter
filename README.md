@@ -7,12 +7,14 @@
 - Software: not started yet
 
 ### HFM Adapter based on: ### 
-- STM32 G4 Nucleo Board
+- STM32 G431KB Nucleo-32 Board
+- Fremont FT24C256A EEPROM to store the tables and configuration
 - ...
 
 ### Features: ### 
 - Automotive grade components
 - 4 layer PCB
+- Configuration via TunerStudio
 
 ### Inputs: ### 
 - two HFM analog inputs
