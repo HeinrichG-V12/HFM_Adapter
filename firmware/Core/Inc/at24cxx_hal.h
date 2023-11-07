@@ -21,7 +21,7 @@ typedef struct __AT24CXX_HandleTypeDef
 {
 	I2C_HandleTypeDef i2c_device;
 	uint16_t at24cxx_address;		// chip address
-	uint16_t at24cxx_size;			// chip size
+	uint16_t at24cxx_size;			// chip size in bytes
 	uint16_t at24cxx_page_size;		// page size in bytes
 	uint16_t at24cxx_page_number;	// page number
 } AT24CXX_HandleTypeDef;
@@ -33,7 +33,7 @@ typedef struct __AT24CXX_HandleTypeDef
   *                		  the configuration information for the specified eeprom device.
   * @retval bool status
   */
-bool at24cxx_connected(AT24CXX_HandleTypeDef eeprom_device);
+HAL_StatusTypeDef at24cxx_connected(AT24CXX_HandleTypeDef eeprom_device);
 
 /**
   * @brief  erase the specified page in eeprom
@@ -42,7 +42,7 @@ bool at24cxx_connected(AT24CXX_HandleTypeDef eeprom_device);
   * @param	page page number to be erased
   * @retval bool status
   */
-bool at24cxx_erase_page(AT24CXX_HandleTypeDef eeprom_device, uint16_t page);
+HAL_StatusTypeDef at24cxx_erase_page(AT24CXX_HandleTypeDef eeprom_device, uint16_t page);
 
 /**
   * @brief  Erase the whole eeprom chip
@@ -50,7 +50,7 @@ bool at24cxx_erase_page(AT24CXX_HandleTypeDef eeprom_device, uint16_t page);
   *                		  the configuration information for the specified eeprom device.
   * @retval bool status
   */
-bool at24cxx_erase_chip(AT24CXX_HandleTypeDef eeprom_device);
+HAL_StatusTypeDef at24cxx_erase_chip(AT24CXX_HandleTypeDef eeprom_device);
 
 
 #ifdef __cplusplus

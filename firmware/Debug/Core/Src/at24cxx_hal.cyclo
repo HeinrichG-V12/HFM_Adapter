@@ -1,3 +1,3 @@
-../Core/Src/at24cxx_hal.c:18:6:at24cxx_connected	2
-../Core/Src/at24cxx_hal.c:35:6:at24cxx_erase_page	2
-../Core/Src/at24cxx_hal.c:54:6:at24cxx_erase_chip	1
+../Core/Src/at24cxx_hal.c:19:19:at24cxx_connected	1
+../Core/Src/at24cxx_hal.c:31:19:at24cxx_erase_page	2
+../Core/Src/at24cxx_hal.c:54:19:at24cxx_erase_chip	1

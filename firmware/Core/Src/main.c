@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "at24cxx_hal.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,6 +48,8 @@ DAC_HandleTypeDef hdac1;
 I2C_HandleTypeDef hi2c2;
 
 /* USER CODE BEGIN PV */
+
+AT24CXX_HandleTypeDef eeprom_chip;
 
 /* USER CODE END PV */
 
@@ -99,7 +101,11 @@ int main(void)
   MX_I2C2_Init();
   MX_USB_Device_Init();
   /* USER CODE BEGIN 2 */
-
+  eeprom_chip.at24cxx_address = 0xA0;
+  eeprom_chip.at24cxx_page_number = 512;
+  eeprom_chip.at24cxx_page_size = 64;
+  eeprom_chip.at24cxx_size = eeprom_chip.at24cxx_page_number * eeprom_chip.at24cxx_page_size;
+  eeprom_chip.i2c_device = hi2c2;
   /* USER CODE END 2 */
 
   /* Infinite loop */
