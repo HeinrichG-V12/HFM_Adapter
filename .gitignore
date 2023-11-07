@@ -1,3 +1,8 @@
+# my own ignores
+
+hardware/Datasheets/Kennlinien.xlsx 
+hardware/Datasheets/VW_VR6_LMMs.png 
+
 # Prerequisites
 *.d
 
