@@ -31,7 +31,7 @@ typedef struct __AT24CXX_HandleTypeDef
   * @brief  Checks if eeprom is connected and ready for communication.
   * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
   *                		  the configuration information for the specified eeprom device.
-  * @retval bool status
+  * @retval HAL_StatusTypeDef
   */
 HAL_StatusTypeDef at24cxx_connected(AT24CXX_HandleTypeDef eeprom_device);
 
@@ -39,8 +39,8 @@ HAL_StatusTypeDef at24cxx_connected(AT24CXX_HandleTypeDef eeprom_device);
   * @brief  erase the specified page in eeprom
   * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
   *                		  the configuration information for the specified eeprom device.
-  * @param	page page number to be erased
-  * @retval bool status
+  * @param	page page number to be erased, from 0 to PAGE_NUM-1
+  * @retval HAL_StatusTypeDef
   */
 HAL_StatusTypeDef at24cxx_erase_page(AT24CXX_HandleTypeDef eeprom_device, uint16_t page);
 
@@ -48,9 +48,21 @@ HAL_StatusTypeDef at24cxx_erase_page(AT24CXX_HandleTypeDef eeprom_device, uint16
   * @brief  Erase the whole eeprom chip
   * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
   *                		  the configuration information for the specified eeprom device.
-  * @retval bool status
+  * @retval HAL_StatusTypeDef
   */
 HAL_StatusTypeDef at24cxx_erase_chip(AT24CXX_HandleTypeDef eeprom_device);
+
+/**
+  * @brief  erase the specified page in eeprom
+  * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
+  *                		  the configuration information for the specified eeprom device.
+  * @param	page is the number of the start page. from 0 to PAGE_NUM-1
+  * @param	offset is the start byte offset in the page. Range from 0 to PAGE_SIZE-1
+  * @param	data is the pointer to the data to write in bytes
+  * @param	size is size of data
+  * @retval bool status
+  */
+HAL_StatusTypeDef at24cxx_write(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset, uint8_t *data, uint16_t size);
 
 
 #ifdef __cplusplus
