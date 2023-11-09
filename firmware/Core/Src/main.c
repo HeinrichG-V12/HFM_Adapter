@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "at24cxx_hal.h"
+#include "ts_config.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,6 +52,15 @@ I2C_HandleTypeDef hi2c2;
 
 AT24CXX_HandleTypeDef eeprom_chip;
 
+extern uint8_t UserRxBufferFS[APP_RX_DATA_SIZE];
+extern uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
+extern uint16_t received_data_length;
+extern bool received_data;
+
+extern TS_Config ts_config;
+
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -60,7 +70,7 @@ static void MX_ADC2_Init(void);
 static void MX_DAC1_Init(void);
 static void MX_I2C2_Init(void);
 /* USER CODE BEGIN PFP */
-
+static void AT24CXX_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -101,17 +111,18 @@ int main(void)
   MX_I2C2_Init();
   MX_USB_Device_Init();
   /* USER CODE BEGIN 2 */
-  eeprom_chip.at24cxx_address = 0xA0;
-  eeprom_chip.at24cxx_page_number = 512;
-  eeprom_chip.at24cxx_page_size = 64;
-  eeprom_chip.at24cxx_size = eeprom_chip.at24cxx_page_number * eeprom_chip.at24cxx_page_size;
-  eeprom_chip.i2c_device = hi2c2;
+  AT24CXX_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if (received_data)
+	  {
+		  // do stuff with new received data....
+		  received_data = false;
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -187,7 +198,7 @@ static void MX_ADC2_Init(void)
   */
   hadc2.Instance = ADC2;
   hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-  hadc2.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc2.Init.Resolution = ADC_RESOLUTION_10B;
   hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc2.Init.GainCompensation = 0;
   hadc2.Init.ScanConvMode = ADC_SCAN_DISABLE;
@@ -361,6 +372,14 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+static void AT24CXX_Init(void)
+{
+	eeprom_chip.at24cxx_address = 0xA0;
+	eeprom_chip.at24cxx_page_number = 512;
+	eeprom_chip.at24cxx_page_size = 64;
+	eeprom_chip.i2c_device = hi2c2;
+}
 
 /* USER CODE END 4 */
 
