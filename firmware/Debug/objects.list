@@ -7,6 +7,7 @@
 "./Core/Src/system_stm32g4xx.o"
 "./Core/Src/ts_config.o"
 "./Core/Startup/startup_stm32g431kbtx.o"
+"./Core/maf.o"
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o"
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc.o"
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc_ex.o"

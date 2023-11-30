@@ -75,7 +75,7 @@ HAL_StatusTypeDef at24cxx_erase_page(AT24CXX_HandleTypeDef eeprom_device, uint16
   */
 HAL_StatusTypeDef at24cxx_erase_chip(AT24CXX_HandleTypeDef eeprom_device)
 {
-	HAL_StatusTypeDef retVal;
+	HAL_StatusTypeDef retVal = HAL_OK;
 
 	uint16_t current_page = 0;
 
@@ -101,7 +101,7 @@ HAL_StatusTypeDef at24cxx_erase_chip(AT24CXX_HandleTypeDef eeprom_device)
 HAL_StatusTypeDef at24cxx_write(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset, uint8_t *data, uint16_t size)
 {
 	uint16_t pos = 0, current_page = 0;
-	HAL_StatusTypeDef retVal;
+	HAL_StatusTypeDef retVal = HAL_OK;
 
 	// Find out the number of bit, where the page addressing starts
 	int paddrposition = log(eeprom_device.at24cxx_page_size)/log(2);
@@ -139,6 +139,23 @@ HAL_StatusTypeDef at24cxx_write(AT24CXX_HandleTypeDef eeprom_device, uint16_t pa
 }
 
 /**
+  * @brief  write a uint16_t value to specified page with specified offset
+  * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
+  *                		  the configuration information for the specified eeprom device.
+  * @param	page is the number of the start page. from 0 to PAGE_NUM-1
+  * @param	offset is the start byte offset in the page. Range from 0 to PAGE_SIZE-1
+  * @param	data is the pointer to the data to write in bytes
+  * @param	size is size of data
+  * @retval bool status
+  */
+HAL_StatusTypeDef at24cxx_write_16(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset, uint16_t data)
+{
+	uint8_t array[2]={ data >> 8 , data & 0xff};
+
+	return at24cxx_write(eeprom_device, page, offset, (uint8_t *) array, sizeof(array));
+}
+
+/**
   * @brief  read specified number of bytes from specified page with specified offset
   * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
   *                		  the configuration information for the specified eeprom device.
@@ -151,14 +168,25 @@ HAL_StatusTypeDef at24cxx_write(AT24CXX_HandleTypeDef eeprom_device, uint16_t pa
 HAL_StatusTypeDef at24cxx_read(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset, uint8_t *data, uint16_t size)
 {
 	uint16_t pos = 0, current_page = 0;
-	HAL_StatusTypeDef retVal;
+	HAL_StatusTypeDef retVal = HAL_OK;
+	uint16_t startPage = 0;
 
 	// Find out the number of bit, where the page addressing starts
 	int paddrposition = log(eeprom_device.at24cxx_page_size)/log(2);
 
 	// calculate the start page and the end page
-	uint16_t startPage = page;
-	uint16_t endPage = page + ((size+offset)/eeprom_device.at24cxx_page_size);
+
+	if (offset >= eeprom_device.at24cxx_page_size)
+	{
+		startPage = page + 1;
+		offset = offset - eeprom_device.at24cxx_page_size;
+	}
+	else
+	{
+		startPage = page;
+	}
+
+	uint16_t endPage = startPage + ((size+offset)/eeprom_device.at24cxx_page_size);
 
 	// number of pages to be written
 	uint16_t numofpages = (endPage-startPage) + 1;
@@ -179,34 +207,29 @@ HAL_StatusTypeDef at24cxx_read(AT24CXX_HandleTypeDef eeprom_device, uint16_t pag
 		pos += bytesremaining;  // update the position for the data buffer
 
 		current_page++;
-
-		if (retVal == HAL_OK)
-		{
-			HAL_Delay(5);
-		}
 	}
 	return retVal;
 }
 
 /**
-  * @brief  read word from eeprm chip
+  * @brief  read uint16_t value from eeprom chip
   * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
   *                		  the configuration information for the specified eeprom device.
   * @param	page is the number of the start page. from 0 to PAGE_NUM-1
   * @param	offset is the start byte offset in the page. Range from 0 to PAGE_SIZE-1
   * @param	data is the pointer to the data to write in bytes
   * @param	size is size of data
-  * @retval bool status
+  * @retval uint16_t value
   */
-uint16_t at24cxx_read_word(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset)
+uint16_t at24cxx_read_16(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset)
 {
-	uint8_t bytes[2];
+	uint8_t bytes_to_read = 2;
+	uint8_t bytes[bytes_to_read];
 
-	if (at24cxx_read(eeprom_device, page, offset, bytes, 2) == HAL_OK)
+	if (at24cxx_read(eeprom_device, page, offset, bytes, bytes_to_read) == HAL_OK)
 	{
 		return ((bytes[0] << 8) | bytes[1]);
 	}
-
 
 	return 0xffff;
 }

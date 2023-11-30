@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "at24cxx_hal.h"
 #include "ts_config.h"
+#include "maf.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,11 +43,14 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc2;
+ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
 
 DAC_HandleTypeDef hdac1;
 
 I2C_HandleTypeDef hi2c2;
+
+TIM_HandleTypeDef htim17;
 
 /* USER CODE BEGIN PV */
 
@@ -58,19 +62,38 @@ extern uint16_t received_data_length;
 extern bool received_data;
 
 extern TS_Config ts_config;
+extern TS_Signature ts_signature;
 
+uint16_t livedata[8];
+int16_t mcu_temp = 0;
+int16_t vref = 0;
+uint16_t hfm1_in_v = 0;
+uint16_t hfm2_in_v = 0;
+uint16_t hfm1_air = 0;
+uint16_t hfm2_air = 0;
+uint16_t hfm1_out_v = 0;
+uint16_t hfm2_out_v = 0;
+uint16_t hfm1_out_dac = 0;
+uint16_t hfm2_out_dac = 0;
 
+uint16_t adc_values[5] = {0};
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_ADC2_Init(void);
+static void MX_DMA_Init(void);
 static void MX_DAC1_Init(void);
 static void MX_I2C2_Init(void);
+static void MX_ADC1_Init(void);
+static void MX_TIM17_Init(void);
 /* USER CODE BEGIN PFP */
+
 static void AT24CXX_Init(void);
+static int16_t calc_temperature (uint16_t data);
+static int16_t calc_vref (uint16_t data);
+static uint16_t calc_voltage (uint16_t data);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -106,21 +129,177 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_ADC2_Init();
+  MX_DMA_Init();
   MX_DAC1_Init();
   MX_I2C2_Init();
   MX_USB_Device_Init();
+  MX_ADC1_Init();
+  MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
+
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_values, 5);
+  HAL_DAC_Start(&hdac1, DAC1_CHANNEL_1);
+  HAL_DAC_Start(&hdac1, DAC1_CHANNEL_2);
+  HAL_TIM_Base_Start_IT(&htim17);
+
   AT24CXX_Init();
+
+
+  uint8_t configCheck;
+
+  if (at24cxx_connected(eeprom_chip) == HAL_OK)
+  {
+	  at24cxx_read(eeprom_chip, 0, 0, (uint8_t*)&configCheck, sizeof (configCheck));
+
+	  if (configCheck == 0xff)
+	  {
+		  // chip is not initialised, so write a default configuration...
+		  create_initial_config(&ts_config, &ts_signature);
+
+		  at24cxx_write(eeprom_chip, TS_SIGNATURE_PAGE, 0, (uint8_t*)&ts_signature, sizeof(ts_signature));
+		  at24cxx_write(eeprom_chip, TS_CONFIG_PAGE, 0, (uint8_t*)&ts_config, sizeof(ts_config));
+	  }
+	  else
+	  {
+		  at24cxx_read(eeprom_chip, TS_SIGNATURE_PAGE, 0, (uint8_t*)&ts_signature, sizeof(ts_signature));
+		  at24cxx_read(eeprom_chip, TS_CONFIG_PAGE, 0, (uint8_t*)&ts_config, sizeof(ts_config));
+	  }
+
+
+	  // at24cxx_erase_chip(eeprom_chip);
+
+	  /*
+	  at24cxx_write(eeprom_chip, 1, 0, (uint8_t*)&dataw, strlen((char *)dataw));
+	  at24cxx_read(eeprom_chip, 1, 0, (uint8_t*)&datar, sizeof (datar));
+
+
+	  at24cxx_write_16(eeprom_chip, 0, 0, data16_w);
+	  data16_r = at24cxx_read_16(eeprom_chip, 0, 0);
+	  */
+  }
+
+  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2284);
+  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 3999);
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
 	  if (received_data)
 	  {
 		  // do stuff with new received data....
+
+		  if (received_data_length == 1)
+		  {
+			  // we have got a single byte command...
+
+			  switch (UserRxBufferFS[0])
+			  {
+				  case 'Z':
+					  at24cxx_erase_chip(eeprom_chip);
+
+					  create_initial_config(&ts_config, &ts_signature);
+
+					  at24cxx_write(eeprom_chip, TS_SIGNATURE_PAGE, 0, (uint8_t*)&ts_signature, sizeof(ts_signature));
+					  at24cxx_write(eeprom_chip, TS_CONFIG_PAGE, 0, (uint8_t*)&ts_config, sizeof(ts_config));
+					  break;
+				  case 'F':
+					  CDC_Transmit_FS((uint8_t*) ts_signature.version, sizeof(ts_signature.version));
+					  break;
+				  case 'Q':
+					  CDC_Transmit_FS((uint8_t*) ts_signature.signature, sizeof(ts_signature.signature));
+					  break;
+				  case 'S':
+					  CDC_Transmit_FS((uint8_t*) ts_signature.version_info, sizeof(ts_signature.version_info));
+					  break;
+				  case 'A':
+					  livedata[0] = hfm1_in_v;
+					  livedata[1] = hfm2_in_v;
+					  livedata[2] = hfm1_air;
+					  livedata[3] = hfm2_air;
+					  livedata[4] = hfm1_out_v;
+					  livedata[5] = hfm2_out_v;
+					  livedata[6] = mcu_temp;
+					  livedata[7] = vref;
+					  CDC_Transmit_FS((uint8_t*) livedata, sizeof(livedata));
+					  break;
+
+				  default:
+					  CDC_Transmit_FS((uint8_t*) "Not implemented", 15);
+					  break;
+			  }
+		  }
+
+		  if (received_data_length > 1)
+		  {
+			  // we have got a multibyte command...
+			  uint8_t cmd[received_data_length];
+			  memcpy(cmd, UserRxBufferFS, received_data_length);
+
+			  switch(cmd[0])
+			  {
+			  	  case 'B':
+					  {
+						  uint16_t page_indentifier = word(cmd[2], cmd[1]);
+						  at24cxx_write(eeprom_chip, page_indentifier, 0, (uint8_t*)&ts_config, sizeof(ts_config));
+					  }
+					  break;
+			  	  case 'R':
+					  {
+					  /* reading page data, 6 bytes expected
+					   * 2 bytes: page identifier
+					   * 2 bytes: offset
+					   * 2 bytes: length
+					  */
+						  uint16_t page_indentifier = word(cmd[2], cmd[1]);
+						  uint16_t offset = word(cmd[4], cmd[3]);
+						  uint16_t lenght = word(cmd[6], cmd[5]);
+						  uint8_t config[lenght];
+
+						  at24cxx_read(eeprom_chip, page_indentifier, offset, (uint8_t*)&config, lenght);
+						  CDC_Transmit_FS((uint8_t*) &config, lenght);
+					  }
+					  break;
+			  	  case 'W':
+					  {
+						  /* we expect 9 bytes
+						   * 1 byte: W
+						   * 2 bytes: pageIdentifier
+						   * 2 bytes: offset / memory address, value: parameterStartOffset + offset
+						   * 2 bytes: length of bytes to be written
+						   * 2 bytes: byte array
+						   */
+
+						  // the real config is starts at offset 64, 0-63 is signature...
+
+						  uint16_t page_indentifier = word(cmd[2], cmd[1]);
+						  uint16_t offset = word(cmd[4], cmd[3]);
+						  uint16_t lenght = word(cmd[6], cmd[5]);
+						  uint16_t value = 0;
+
+						  if (offset == lenght)
+						  {
+							  // single byte value
+							  value = cmd[7];
+						  }
+						  else
+						  {
+							  // two byte value
+							  value = word(cmd[8], cmd[7]);
+						  }
+
+						  set_page_value(offset, value, &ts_config);
+					  }
+			  		  break;
+			  }
+
+		  }
+
 		  received_data = false;
 	  }
     /* USER CODE END WHILE */
@@ -177,42 +356,51 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief ADC2 Initialization Function
+  * @brief ADC1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_ADC2_Init(void)
+static void MX_ADC1_Init(void)
 {
 
-  /* USER CODE BEGIN ADC2_Init 0 */
+  /* USER CODE BEGIN ADC1_Init 0 */
 
-  /* USER CODE END ADC2_Init 0 */
+  /* USER CODE END ADC1_Init 0 */
 
+  ADC_MultiModeTypeDef multimode = {0};
   ADC_ChannelConfTypeDef sConfig = {0};
 
-  /* USER CODE BEGIN ADC2_Init 1 */
+  /* USER CODE BEGIN ADC1_Init 1 */
 
-  /* USER CODE END ADC2_Init 1 */
+  /* USER CODE END ADC1_Init 1 */
 
   /** Common config
   */
-  hadc2.Instance = ADC2;
-  hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-  hadc2.Init.Resolution = ADC_RESOLUTION_10B;
-  hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc2.Init.GainCompensation = 0;
-  hadc2.Init.ScanConvMode = ADC_SCAN_DISABLE;
-  hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-  hadc2.Init.LowPowerAutoWait = DISABLE;
-  hadc2.Init.ContinuousConvMode = DISABLE;
-  hadc2.Init.NbrOfConversion = 1;
-  hadc2.Init.DiscontinuousConvMode = DISABLE;
-  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc2.Init.DMAContinuousRequests = DISABLE;
-  hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
-  hadc2.Init.OversamplingMode = DISABLE;
-  if (HAL_ADC_Init(&hadc2) != HAL_OK)
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.GainCompensation = 0;
+  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc1.Init.LowPowerAutoWait = DISABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.NbrOfConversion = 5;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.DMAContinuousRequests = ENABLE;
+  hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  hadc1.Init.OversamplingMode = DISABLE;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure the ADC multi-mode
+  */
+  multimode.Mode = ADC_MODE_INDEPENDENT;
+  if (HAL_ADCEx_MultiModeConfigChannel(&hadc1, &multimode) != HAL_OK)
   {
     Error_Handler();
   }
@@ -221,17 +409,60 @@ static void MX_ADC2_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_24CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
-  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN ADC2_Init 2 */
 
-  /* USER CODE END ADC2_Init 2 */
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_2;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_3;
+  sConfig.Rank = ADC_REGULAR_RANK_3;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_TEMPSENSOR_ADC1;
+  sConfig.Rank = ADC_REGULAR_RANK_4;
+  sConfig.SamplingTime = ADC_SAMPLETIME_247CYCLES_5;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_VREFINT;
+  sConfig.Rank = ADC_REGULAR_RANK_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_92CYCLES_5;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK)
+  {
+	  Error_Handler();
+  }
+
+  /* USER CODE END ADC1_Init 2 */
 
 }
 
@@ -285,6 +516,16 @@ static void MX_DAC1_Init(void)
   }
   /* USER CODE BEGIN DAC1_Init 2 */
 
+  if (HAL_DACEx_SelfCalibrate(&hdac1, &sConfig, DAC_CHANNEL_1) != HAL_OK)
+   {
+     Error_Handler();
+   }
+
+  if (HAL_DACEx_SelfCalibrate(&hdac1, &sConfig, DAC_CHANNEL_2) != HAL_OK)
+   {
+     Error_Handler();
+   }
+
   /* USER CODE END DAC1_Init 2 */
 
 }
@@ -305,7 +546,7 @@ static void MX_I2C2_Init(void)
 
   /* USER CODE END I2C2_Init 1 */
   hi2c2.Instance = I2C2;
-  hi2c2.Init.Timing = 0x0070215B;
+  hi2c2.Init.Timing = 0x00E057FD;
   hi2c2.Init.OwnAddress1 = 0;
   hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -331,13 +572,58 @@ static void MX_I2C2_Init(void)
   {
     Error_Handler();
   }
-
-  /** I2C Fast mode Plus enable
-  */
-  __HAL_SYSCFG_FASTMODEPLUS_ENABLE(I2C_FASTMODEPLUS_I2C2);
   /* USER CODE BEGIN I2C2_Init 2 */
 
   /* USER CODE END I2C2_Init 2 */
+
+}
+
+/**
+  * @brief TIM17 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM17_Init(void)
+{
+
+  /* USER CODE BEGIN TIM17_Init 0 */
+
+  /* USER CODE END TIM17_Init 0 */
+
+  /* USER CODE BEGIN TIM17_Init 1 */
+
+  /* USER CODE END TIM17_Init 1 */
+  htim17.Instance = TIM17;
+  htim17.Init.Prescaler = 14400-1;
+  htim17.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim17.Init.Period = 1999;
+  htim17.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim17.Init.RepetitionCounter = 0;
+  htim17.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim17) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM17_Init 2 */
+
+  /* USER CODE END TIM17_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMAMUX1_CLK_ENABLE();
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
 }
 
@@ -358,14 +644,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(RUN_GPIO_Port, RUN_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, USER_Pin|LD2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : RUN_Pin */
-  GPIO_InitStruct.Pin = RUN_Pin;
+  /*Configure GPIO pins : USER_Pin LD2_Pin */
+  GPIO_InitStruct.Pin = USER_Pin|LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(RUN_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
@@ -379,6 +665,86 @@ static void AT24CXX_Init(void)
 	eeprom_chip.at24cxx_page_number = 512;
 	eeprom_chip.at24cxx_page_size = 64;
 	eeprom_chip.i2c_device = hi2c2;
+}
+
+static int16_t calc_temperature (uint16_t data)
+{
+
+	/*
+	 * Formula:
+	 * temp in °C = ((TS_CAL2_TEMP - TS_CAL1_TEMP) / (TS_CAL2 - TS_CAL1)) * (TS_DATA - TS_CAL1) + 30°C
+	 *
+	 * TS_DATA is value from ADC
+	 *
+	 */
+
+	float pre = ((float) data / 3) * 3.3;	// rescale from 3.0 volt to 3.3 volts, since the reference values are taken at 3.0volts
+	float first = (float)(TEMPSENSOR_CAL2_TEMP - TEMPSENSOR_CAL1_TEMP)/(float)(*TEMPSENSOR_CAL2_ADDR - *TEMPSENSOR_CAL1_ADDR);
+	float second = (float)(pre - *TEMPSENSOR_CAL1_ADDR);
+	float third = first * second + 30.0;
+
+	return (int16_t)(third * 100);
+}
+
+static int16_t calc_vref (uint16_t data)
+{
+	/*
+	 * Formula:
+	 * Vref = Vref_char * VREFINT_CAL / VREFINT_DATA
+	 */
+
+	float first = (float)(VREFINT_CAL_VREF * *VREFINT_CAL_ADDR);
+	float second = first / (float)(data);	// vdda...
+	float third = second / (float) 4096 * (float)(data);	// vref
+
+
+	return (int16_t)(third);
+}
+
+static uint16_t calc_voltage (uint16_t data)
+{
+	float first = 3.3 / (float) 4096;
+	float second = first * (float) data;
+	float third = 0;
+
+	if (ts_config.showRealADCVoltages)
+	{
+		third = second;
+	}
+	else
+	{
+		third = second * 1.5151515151;
+	}
+
+	return (uint16_t)(third*1000);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	if (htim == &htim17) {
+		mcu_temp = calc_temperature(adc_values[3]);
+		vref = calc_vref(adc_values[4]);
+
+		if (ts_config.isChannel1Enabled)
+		{
+			hfm1_in_v = calc_voltage(adc_values[0]);
+			hfm1_air = interpolate_voltage2airMass(hfm1_in_v);
+			hfm1_out_v = interpolate_airMass2voltage(hfm1_air);
+			hfm1_out_dac = calculate_dac_value_for_voltage(hfm1_out_v);
+			HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, hfm1_out_dac);
+		}
+
+		if (ts_config.isChannel2Enabled)
+		{
+			hfm2_in_v = calc_voltage(adc_values[1]);
+			hfm2_air = interpolate_voltage2airMass(hfm2_in_v);
+			hfm2_out_v = interpolate_airMass2voltage(hfm2_air);
+			hfm2_out_dac = calculate_dac_value_for_voltage(hfm2_out_v);
+			HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, hfm2_out_dac);
+		}
+
+		int i = 10;
+
+	}
 }
 
 /* USER CODE END 4 */

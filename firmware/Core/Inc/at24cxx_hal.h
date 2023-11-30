@@ -60,7 +60,7 @@ HAL_StatusTypeDef at24cxx_erase_page(AT24CXX_HandleTypeDef eeprom_device, uint16
 HAL_StatusTypeDef at24cxx_erase_chip(AT24CXX_HandleTypeDef eeprom_device);
 
 /**
-  * @brief  erase the specified page in eeprom
+  * @brief  write specified number of bytes to specified page with specified offset
   * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
   *                		  the configuration information for the specified eeprom device.
   * @param	page is the number of the start page. from 0 to PAGE_NUM-1
@@ -70,6 +70,30 @@ HAL_StatusTypeDef at24cxx_erase_chip(AT24CXX_HandleTypeDef eeprom_device);
   * @retval bool status
   */
 HAL_StatusTypeDef at24cxx_write(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset, uint8_t *data, uint16_t size);
+
+/**
+  * @brief  write a uint16_t value to specified page with specified offset
+  * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
+  *                		  the configuration information for the specified eeprom device.
+  * @param	page is the number of the start page. from 0 to PAGE_NUM-1
+  * @param	offset is the start byte offset in the page. Range from 0 to PAGE_SIZE-1
+  * @param	data is the pointer to the data to write in bytes
+  * @param	size is size of data
+  * @retval bool status
+  */
+HAL_StatusTypeDef at24cxx_write_16(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset, uint16_t data);
+
+/**
+  * @brief  write a uint16_t value to specified page with specified offset
+  * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
+  *                		  the configuration information for the specified eeprom device.
+  * @param	page is the number of the start page. from 0 to PAGE_NUM-1
+  * @param	offset is the start byte offset in the page. Range from 0 to PAGE_SIZE-1
+  * @param	data is the pointer to the data to write in bytes
+  * @param	size is size of data
+  * @retval bool status
+  */
+HAL_StatusTypeDef at24cxx_write_32(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset, uint32_t data);
 
 /**
   * @brief  read specified number of bytes from specified page with specified offset
@@ -82,6 +106,18 @@ HAL_StatusTypeDef at24cxx_write(AT24CXX_HandleTypeDef eeprom_device, uint16_t pa
   * @retval bool status
   */
 HAL_StatusTypeDef at24cxx_read(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset, uint8_t *data, uint16_t size);
+
+/**
+  * @brief  read uint16_t value from eeprom chip
+  * @param  eeprom_device Pointer to a AT24CXX_HandleTypeDef structure that contains
+  *                		  the configuration information for the specified eeprom device.
+  * @param	page is the number of the start page. from 0 to PAGE_NUM-1
+  * @param	offset is the start byte offset in the page. Range from 0 to PAGE_SIZE-1
+  * @param	data is the pointer to the data to write in bytes
+  * @param	size is size of data
+  * @retval uint16_t value
+  */
+uint16_t at24cxx_read_16(AT24CXX_HandleTypeDef eeprom_device, uint16_t page, uint16_t offset);
 
 #ifdef __cplusplus
 }
