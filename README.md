@@ -27,3 +27,8 @@
 
 ### Pin terminal for BMW M70 adapter:
 - pin terminal 1252 1718125
+- connector boot 1252 1711262
+- pins: 
+-- 0.5 - 1.0mm² 6113 1376191
+-- 1.0mm² - 2.5mm² 6113 1376193
+-- 2.5mm² - 4.0mm² 6113 1376195
