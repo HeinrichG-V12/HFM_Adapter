@@ -39,13 +39,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  00024746  00000000  00000000  00048af4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00024795  00000000  00000000  0006d23a  2**0
+ 18 .debug_line   00022400  00000000  00000000  0006d23a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000e02e2  00000000  00000000  000919cf  2**0
+ 19 .debug_str    000e02ee  00000000  00000000  0008f63a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  00007f30  00000000  00000000  00171cb4  2**2
+ 20 .debug_frame  00007f30  00000000  00000000  0016f928  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000004a  00000000  00000000  00179be4  2**0
+ 21 .debug_line_str 00000056  00000000  00000000  00177858  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -706,7 +706,7 @@ Disassembly of section .text:
  80009b2:	e712      	b.n	80007da <__aeabi_dmul+0x24a>
 
 080009b4 <__gedf2>:
- 80009b4:	f04f 3cff 	mov.w	ip, #4294967295
+ 80009b4:	f04f 3cff 	mov.w	ip, #4294967295	; 0xffffffff
  80009b8:	e006      	b.n	80009c8 <__cmpdf2+0x4>
  80009ba:	bf00      	nop
 
@@ -5109,7 +5109,7 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
         HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 0U);
  80026d2:	2200      	movs	r2, #0
  80026d4:	6879      	ldr	r1, [r7, #4]
- 80026d6:	f04f 30ff 	mov.w	r0, #4294967295
+ 80026d6:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
  80026da:	f001 fc74 	bl	8003fc6 <HAL_NVIC_SetPriority>
         uwTickPrio = TickPriority;
  80026de:	4a0a      	ldr	r2, [pc, #40]	; (8002708 <HAL_InitTick+0x70>)
@@ -5218,7 +5218,7 @@ __weak void HAL_Delay(uint32_t Delay)
   /* Add a freq to guarantee minimum wait */
   if (wait < HAL_MAX_DELAY)
  800275a:	68fb      	ldr	r3, [r7, #12]
- 800275c:	f1b3 3fff 	cmp.w	r3, #4294967295
+ 800275c:	f1b3 3fff 	cmp.w	r3, #4294967295	; 0xffffffff
  8002760:	d004      	beq.n	800276c <HAL_Delay+0x24>
   {
     wait += (uint32_t)(uwTickFreq);
@@ -9265,7 +9265,7 @@ __STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t P
 
   return (
            ((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
- 8003f38:	f04f 32ff 	mov.w	r2, #4294967295
+ 8003f38:	f04f 32ff 	mov.w	r2, #4294967295	; 0xffffffff
  8003f3c:	69bb      	ldr	r3, [r7, #24]
  8003f3e:	fa02 f303 	lsl.w	r3, r2, r3
  8003f42:	43da      	mvns	r2, r3
@@ -9274,7 +9274,7 @@ __STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t P
  8003f48:	697b      	ldr	r3, [r7, #20]
  8003f4a:	409a      	lsls	r2, r3
            ((SubPriority     & (uint32_t)((1UL << (SubPriorityBits    )) - 1UL)))
- 8003f4c:	f04f 31ff 	mov.w	r1, #4294967295
+ 8003f4c:	f04f 31ff 	mov.w	r1, #4294967295	; 0xffffffff
  8003f50:	697b      	ldr	r3, [r7, #20]
  8003f52:	fa01 f303 	lsl.w	r3, r1, r3
  8003f56:	43d9      	mvns	r1, r3
@@ -9320,7 +9320,7 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
  8003f88:	6053      	str	r3, [r2, #4]
   NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
  8003f8a:	210f      	movs	r1, #15
- 8003f8c:	f04f 30ff 	mov.w	r0, #4294967295
+ 8003f8c:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
  8003f90:	f7ff ff8e 	bl	8003eb0 <__NVIC_SetPriority>
   SysTick->VAL   = 0UL;                                             /* Load the SysTick Counter Value */
  8003f94:	4b05      	ldr	r3, [pc, #20]	; (8003fac <SysTick_Config+0x40>)
@@ -13149,7 +13149,7 @@ HAL_StatusTypeDef HAL_I2C_IsDeviceReady(I2C_HandleTypeDef *hi2c, uint16_t DevAdd
       {
         if (Timeout != HAL_MAX_DELAY)
  8005532:	683b      	ldr	r3, [r7, #0]
- 8005534:	f1b3 3fff 	cmp.w	r3, #4294967295
+ 8005534:	f1b3 3fff 	cmp.w	r3, #4294967295	; 0xffffffff
  8005538:	d01a      	beq.n	8005570 <HAL_I2C_IsDeviceReady+0xf4>
         {
           if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
@@ -13719,7 +13719,7 @@ static HAL_StatusTypeDef I2C_WaitOnFlagUntilTimeout(I2C_HandleTypeDef *hi2c, uin
     /* Check for the Timeout */
     if (Timeout != HAL_MAX_DELAY)
  8005836:	683b      	ldr	r3, [r7, #0]
- 8005838:	f1b3 3fff 	cmp.w	r3, #4294967295
+ 8005838:	f1b3 3fff 	cmp.w	r3, #4294967295	; 0xffffffff
  800583c:	d01e      	beq.n	800587c <I2C_WaitOnFlagUntilTimeout+0x58>
     {
       if (((HAL_GetTick() - Tickstart) > Timeout) || (Timeout == 0U))
@@ -13818,7 +13818,7 @@ static HAL_StatusTypeDef I2C_WaitOnTXISFlagUntilTimeout(I2C_HandleTypeDef *hi2c,
     /* Check for the Timeout */
     if (Timeout != HAL_MAX_DELAY)
  80058c6:	68bb      	ldr	r3, [r7, #8]
- 80058c8:	f1b3 3fff 	cmp.w	r3, #4294967295
+ 80058c8:	f1b3 3fff 	cmp.w	r3, #4294967295	; 0xffffffff
  80058cc:	d01e      	beq.n	800590c <I2C_WaitOnTXISFlagUntilTimeout+0x68>
     {
       if (((HAL_GetTick() - Tickstart) > Timeout) || (Timeout == 0U))
@@ -14011,7 +14011,7 @@ static HAL_StatusTypeDef I2C_IsErrorOccurred(I2C_HandleTypeDef *hi2c, uint32_t T
       /* Check for the Timeout */
       if (Timeout != HAL_MAX_DELAY)
  80059d2:	68bb      	ldr	r3, [r7, #8]
- 80059d4:	f1b3 3fff 	cmp.w	r3, #4294967295
+ 80059d4:	f1b3 3fff 	cmp.w	r3, #4294967295	; 0xffffffff
  80059d8:	d052      	beq.n	8005a80 <I2C_IsErrorOccurred+0xe4>
       {
         if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
@@ -33110,7 +33110,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status)
 0800d688 <memcpy>:
  800d688:	440a      	add	r2, r1
  800d68a:	4291      	cmp	r1, r2
- 800d68c:	f100 33ff 	add.w	r3, r0, #4294967295
+ 800d68c:	f100 33ff 	add.w	r3, r0, #4294967295	; 0xffffffff
  800d690:	d100      	bne.n	800d694 <memcpy+0xc>
  800d692:	4770      	bx	lr
  800d694:	b510      	push	{r4, lr}
