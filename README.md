@@ -5,13 +5,13 @@
 
 ## Development status
 
-- Hardware: working in progress
-- Software: not started yet
+- Hardware: Revision 1.0 done
+- Software: WIP
 
 ### HFM Adapter based on
 
 - STM32 G431KB Nucleo-32 Board
-- Fremont FT24C256A EEPROM to store the tables and configuration
+- ST M24M02 EEPROM to store the tables and configuration
 - ...
 
 ### Features
@@ -22,13 +22,20 @@
 
 ### Inputs
 
-- two HFM analog inputs
+- two HFM buffered analog inputs
 - USB for configuration
-- UBat input for voltage monitoring
+- VBat input for voltage monitoring 
 
 ### Outputs
 
 - two analog outputs
+- two precision reference 5.0v outputs for HFM
+- two Vbat outputs for HFM
+
+### Housing
+
+- Header: Amphenol ATM13-12PA
+- Enclosure: Amphenol AIPXE-325X4
 
 ### Pin terminal for BMW M70 adapter
 
