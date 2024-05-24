@@ -1,3 +1,0 @@
-../Core/maf.c:15:10:interpolate_voltage2airMass	8
-../Core/maf.c:54:10:interpolate_airMass2voltage	8
-../Core/maf.c:94:10:calculate_dac_value_for_voltage	1

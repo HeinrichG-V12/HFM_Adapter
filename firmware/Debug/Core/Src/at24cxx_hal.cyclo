@@ -1,8 +1,0 @@
-../Core/Src/at24cxx_hal.c:20:10:bytestowrite	2
-../Core/Src/at24cxx_hal.c:32:19:at24cxx_connected	1
-../Core/Src/at24cxx_hal.c:44:19:at24cxx_erase_page	3
-../Core/Src/at24cxx_hal.c:76:19:at24cxx_erase_chip	3
-../Core/Src/at24cxx_hal.c:101:19:at24cxx_write	4
-../Core/Src/at24cxx_hal.c:151:19:at24cxx_write_16	1
-../Core/Src/at24cxx_hal.c:168:19:at24cxx_read	4
-../Core/Src/at24cxx_hal.c:224:10:at24cxx_read_16	2
