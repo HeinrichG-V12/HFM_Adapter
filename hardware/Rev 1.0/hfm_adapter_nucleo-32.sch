@@ -18329,7 +18329,7 @@ small plastic SMD package. Single diodes and double diodes with different pinnin
 <part name="U$11" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$12" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$16" library="microbuilder" deviceset="GND" device=""/>
-<part name="R3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="18k 0.5%"/>
+<part name="R3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="17k 0.5%"/>
 <part name="R4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="33k 0.5%"/>
 <part name="C4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2" value="100nF"/>
 <part name="FRAME4" library="Heinrich" deviceset="FRAME_A4" device="" value="Power"/>
@@ -18344,10 +18344,10 @@ small plastic SMD package. Single diodes and double diodes with different pinnin
 <part name="U$22" library="Heinrich" deviceset="VBAT_RAW" device=""/>
 <part name="U$37" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="U$39" library="microbuilder" deviceset="GND" device=""/>
-<part name="R7" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="10k 0.5%"/>
-<part name="R8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="5k1 0.5%"/>
-<part name="R10" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="10k 0.5%"/>
-<part name="R11" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="5k1 0.5%"/>
+<part name="R7" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="17k 0.5%"/>
+<part name="R8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="33k 0.5%"/>
+<part name="R10" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="17k 0.5%"/>
+<part name="R11" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="33k 0.5%"/>
 <part name="U$43" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$44" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$47" library="microbuilder" deviceset="GND" device=""/>
@@ -18387,7 +18387,7 @@ small plastic SMD package. Single diodes and double diodes with different pinnin
 <part name="U$35" library="Heinrich" deviceset="VBAT_RAW" device=""/>
 <part name="IC6" library="Heinrich" deviceset="SRV05-4MR6T1G" device="TSSOP6"/>
 <part name="U$18" library="microbuilder" deviceset="GND" device=""/>
-<part name="R5" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="18k 0.5%"/>
+<part name="R5" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="17k 0.5%"/>
 <part name="R6" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="33k 0.5%"/>
 <part name="R13" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="82k"/>
 <part name="R14" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="10k"/>
@@ -18721,7 +18721,7 @@ Pin 4: GND</text>
 <plain>
 <text x="121.92" y="160.02" size="1.778" layer="97">Voltage divider faktor:
 
-18k / 33k = 0.64705882</text>
+33k / (17k +33k) = 0.66</text>
 </plain>
 <instances>
 <instance part="FRAME2" gate="G$1" x="0" y="0"/>
@@ -19041,7 +19041,7 @@ Pin 4: GND</text>
 <description>Output</description>
 <plain>
 <text x="93.98" y="157.48" size="1.778" layer="97">VIN is 10v, because of 5v output of OpAmps.
-OpAmps are running with gain of 1.510</text>
+OpAmps are running with gain of 1.515</text>
 </plain>
 <instances>
 <instance part="FRAME3" gate="G$1" x="0" y="0"/>
@@ -19164,7 +19164,7 @@ OpAmps are running with gain of 1.510</text>
 <description>Power</description>
 <plain>
 <text x="66.04" y="149.86" size="1.778" layer="97">VIN is 10v, because of 5v output of OpAmps.
-OpAmps are running with gain of 1.510</text>
+OpAmps are running with gain of 1.515</text>
 </plain>
 <instances>
 <instance part="FRAME4" gate="G$1" x="0" y="0"/>
