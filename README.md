@@ -1,18 +1,20 @@
-
 # HFM Adapter
 
-## With this adapter it is possible to replace a HLM with a HFM.
+## With this adapter it is possible to replace any HLM with any HFM.
 
 ## Development status
 
-- Hardware: Revision 1.0 done
-- Software: WIP
+
+- [Hardware: Revision 1.0 done](./Rev 1.0/README.md)
+- Software: Version 1.0 done
 
 ### HFM Adapter based on
 
 - STM32 G431KB Nucleo-32 Board
-- ST M24M02 EEPROM to store the tables and configuration
-- ...
+- ST M24M02 2MBit serial I²C EEPROM to store the tables and configuration
+- TI REF02 +5.0v precision voltage reference, +-0.2%
+- Infineon TLE4252D tracking regulator 250mA
+- TI OPA2992 output operation amplifier
 
 ### Features
 
@@ -22,7 +24,7 @@
 
 ### Inputs
 
-- two HFM buffered analog inputs
+- two HFM buffered analog inputs (0v - 5v) with overvoltage protection 
 - USB for configuration
 - VBat input for voltage monitoring 
 
