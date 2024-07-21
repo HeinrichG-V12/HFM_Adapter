@@ -4,10 +4,9 @@
 
 ## Development status
 
-
 - Hardware: Revision 1.0 done
-  - Revision 1.0 is erroneous, swapped pins on TLE42764.
-  - Revision 1.1 follows...
+  - [**Revision 1.0 is erroneous, swapped pins on TLE42764 and TLE4252D.**](./hardware/Rev1.0/README.md)
+  - [Revision 1.1 done](./hardware/Rev1.1/README.md)
 - Software: Version 1.0 done
 
 ### HFM Adapter based on

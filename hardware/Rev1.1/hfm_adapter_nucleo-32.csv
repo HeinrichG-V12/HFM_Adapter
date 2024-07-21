@@ -1,0 +1,28 @@
+Qty;Value;Device;Package;Parts;Description;ARROW_PART_NUMBER;ARROW_PRICE-STOCK;DESCRIPTION;HEIGHT;MANUFACTURER_NAME;MANUFACTURER_PART_NUMBER;MF;MOUSER_PART_NUMBER;MOUSER_PRICE-STOCK;MPN;OC_FARNELL;OC_NEWARK;RS_PART_NUMBER;RS_PRICE-STOCK;SPICEPREFIX
+10;100nF;C-EUC0805;C0805;C2, C4, C5, C8, C9, C10, C13, C14, C15, C17;CAPACITOR, European symbol;;;;;;;;;;;;;;;C
+1;100nF;C-EUC1206;C1206;C6;CAPACITOR, European symbol;;;;;;;;;;;;;;;C
+8;10k 0.5%;R-EU_R0805;R0805;R4, R6, R8, R11, R12, R14, R15, R16;RESISTOR, European symbol;;;;;;;;;;;;;;;R
+1;10µF  50v;CPOL-EUD;PANASONIC_D;C12;POLARIZED CAPACITOR, European symbol;;;;;;;;;;;;;;;C
+3;1uF;C-EUC0805;C0805;C1, C11, C16;CAPACITOR, European symbol;;;;;;;;;;;;;;;C
+1;22µF;CPOL-EUC;PANASONIC_C;C7;POLARIZED CAPACITOR, European symbol;;;;;;;;;;;;;;;C
+1;30k 0.5%;R-EU_R0805;R0805;R9;RESISTOR, European symbol;;;;;;;;;;;;;;;R
+2;470k;R-EU_R0805;R0805;R18, R19;RESISTOR, European symbol;;;;;;;;;;;;;;;R
+2;4k7;R-EU_R0805;R0805;R1, R2;RESISTOR, European symbol;;;;;;;;;;;;;;;R
+4;5k6 0.5%;R-EU_R0805;R0805;R3, R5, R7, R10;RESISTOR, European symbol;;;;;;;;;;;;;;;R
+1;82k 0.5%;R-EU_R0805;R0805;R13;RESISTOR, European symbol;;;;;;;;;;;;;;;R
+1;ADR01_02_03;ADR01_02_03;SOIC8;IC9;;;;;;;;;;;;;;;;
+1;ATM13-12PX;ATM13-12PX;ATM13-12PX;HOUSING;;;;;;;;;;;;;;;;
+1;B5819W;SHOTTKYSOD-123;SOD-123;D4;;;;;;;;;;;;;;;;
+1;BAT54S;BAT54S;SOT23;D1;Schottky barrier (double) diodesPlanar Schottky barrier diodes encapsulated in a SOT23;;;;;;;;;;;;;;;
+1;IP4234CZ6,115;IP4234CZ6,115;SOT95P275X110-6N;IC3;ESD Suppressors / TVS Diodes ESD PRTCT/HI SPD INF ZEN LOW VLTG CLMP;IP4234CZ6,115;null?region=nac;ESD Suppressors / TVS Diodes ESD PRTCT/HI SPD INF ZEN LOW VLTG CLMP;1.1mm;Nexperia;IP4234CZ6,115;;771-IP4234CZ6;https://www.mouser.co.uk/ProductDetail/Nexperia/IP4234CZ6115?qs=iS%252BvaFGfLooAQ%252BprbRTkIg%3D%3D;;;;;;
+1;KUSBVX-BS1N;KUSBVX-BS1N;KUSBVX-BS1N;X2;USB B-type Receptacle Vertical, 4 Position, Through Hole;;;;;;;;;;;;;;;
+1;LPS25HBTR;LPS25HBTR;LPS25HBTR;IC4;Board Mount Pressure Sensor 26kPa to 126kPa Absolute 10-Pin HLGA T/R;LPS25HBTR;https://www.arrow.com/en/products/lps25hbtr/stmicroelectronics;Board Mount Pressure Sensor 26kPa to 126kPa Absolute 10-Pin HLGA T/R;0.8mm;STMicroelectronics;LPS25HBTR;;511-LPS25HBTR;https://www.mouser.co.uk/ProductDetail/STMicroelectronics/LPS25HBTR?qs=GDOUxV2YAh9IvjPyBKWGzQ%3D%3D;;;;;;
+1;M24M02;EEPROM_I2CSO8;SO8;IC2;I²C EEPROM IC, i.e. FT24C256A;;;;;;;;;;;;;;;
+1;NUCLEO-G431KB;NUCLEO-G431KB;DIPS1524W66P254L5029H1500Q30N;IC1;STM32 Nucleo-32 development board;NUCLEO-F303K8;https://www.arrow.com/en/products/nucleo-f303k8/stmicroelectronics;STM32 Nucleo-32 development board;15mm;STMicroelectronics;NUCLEO-F303K8;;;;;;;9092862;http://uk.rs-online.com/web/p/products/9092862;
+1;OPA2172D;OPA2172D;SO08;IC11;Operational Amplifier;;;;;;;TEXAS INSTRUMENTS;;;OPA2234U;1212441;96K4523;;;
+1;OPA2992D;OPA2172D;SO08;IC10;Operational Amplifier;;;;;;;TEXAS INSTRUMENTS;;;OPA2234U;1212441;96K4523;;;
+1;S1J;SHOTTKYSMA;DO214AC;D5;;;;;;;;;;;;;;;;
+1;SMBJ36CA;TVS_BIA;DO214AA;D2;;;;;;;;;;;;;;;;
+1;SRV05-4MR6T1GTSSOP6;SRV05-4MR6T1GTSSOP6;TSSOP6;IC6;;SRV05-4MR6T1G;https://www.arrow.com/en/products/srv05-4mr6t1g/on-semiconductor?region=nac;ON SEMICONDUCTOR - SRV05-4MR6T1G - ESD Protection Device, 17.5 V, TSOP, 6 Pins, 300 W;1.1mm;onsemi;SRV05-4MR6T1G;;863-SRV05-4MR6T1G;https://www.mouser.co.uk/ProductDetail/onsemi/SRV05-4MR6T1G?qs=unWjWFgkqcg61n2fM3DdZg%3D%3D;;;;;;
+1;TLE4252D;TLE4252D;TO-252-5-INF;IC7;Infineon Tracking regualtor;;;;;;;;;;;;;;;
+1;TLE42764DV;TLE42764DV;TO-252-5-INF;IC8;;;;;;;;;;;;;;;;

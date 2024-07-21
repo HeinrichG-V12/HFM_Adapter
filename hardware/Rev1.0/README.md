@@ -2,6 +2,12 @@
 
 ## Revision 1.0
 
+### **This revision is erroneous!**
+### **Do not use!**
+### **Swapped pins on TLE42764 and TLE4252D.**
+
+[Schematic](./hfm_adapter_nucleo-32.pdf)
+
 Pinout
 
 |Pin#|Wire size|Main color|Second color|Signal|
