@@ -18265,7 +18265,6 @@ small plastic SMD package. Single diodes and double diodes with different pinnin
 <part name="U$5" library="microbuilder" deviceset="VIN" device=""/>
 <part name="U$13" library="microbuilder" deviceset="5.0V" device=""/>
 <part name="U$51" library="microbuilder" deviceset="5.0V" device=""/>
-<part name="U$53" library="microbuilder" deviceset="GND" device=""/>
 <part name="C11" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2" value="1uF"/>
 <part name="U$54" library="microbuilder" deviceset="GND" device=""/>
 <part name="C13" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2" value="100nF"/>
@@ -19062,7 +19061,7 @@ OpAmps are running with gain of 1.56: (1+5k6/10k)</text>
 <description>Power</description>
 <plain>
 <text x="66.04" y="149.86" size="1.778" layer="97">VIN is 10v, because of 5v output of OpAmps.
-OpAmps are running with gain of 1.515</text>
+OpAmps are running with gain of 1.56</text>
 </plain>
 <instances>
 <instance part="FRAME4" gate="G$1" x="0" y="0"/>
@@ -19077,7 +19076,6 @@ OpAmps are running with gain of 1.515</text>
 <instance part="C7" gate="G$1" x="114.3" y="137.16"/>
 <instance part="U$26" gate="G$1" x="114.3" y="127"/>
 <instance part="U$50" gate="G$1" x="132.08" y="142.24" rot="R270"/>
-<instance part="U$53" gate="G$1" x="124.46" y="35.56"/>
 <instance part="C11" gate="G$1" x="124.46" y="137.16"/>
 <instance part="U$54" gate="G$1" x="124.46" y="127"/>
 <instance part="C13" gate="G$1" x="121.92" y="83.82"/>
