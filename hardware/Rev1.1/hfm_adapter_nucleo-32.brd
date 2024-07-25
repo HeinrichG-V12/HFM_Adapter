@@ -2780,7 +2780,6 @@ Everything else you will find on https://aisler.net/help</description>
 <contactref element="R9" pad="1"/>
 <contactref element="R12" pad="2"/>
 <contactref element="IC8" pad="4"/>
-<wire x1="30.35" y1="66.32" x2="30.48" y2="66.45" width="0.1524" layer="1"/>
 <wire x1="30.35" y1="66.32" x2="30.35" y2="68.45" width="0.1524" layer="1"/>
 <wire x1="30.35" y1="68.45" x2="31.115" y2="69.215" width="0.1524" layer="1"/>
 <wire x1="31.115" y1="69.215" x2="34.29" y2="69.215" width="0.1524" layer="1"/>
@@ -2845,26 +2844,23 @@ Everything else you will find on https://aisler.net/help</description>
 <wire x1="52.6288" y1="36.83" x2="51.435" y2="36.83" width="0.254" layer="1"/>
 <wire x1="48.895" y1="22.86" x2="48.26" y2="23.495" width="0.254" layer="1"/>
 <wire x1="48.895" y1="22.86" x2="66.04" y2="22.86" width="0.254" layer="1"/>
-<wire x1="31.648384375" y1="66.32" x2="31.49" y2="66.32" width="0.254" layer="1"/>
 <wire x1="48.26" y1="23.495" x2="48.26" y2="35.56" width="0.254" layer="1"/>
 <wire x1="48.26" y1="35.56" x2="48.26" y2="36.83" width="0.254" layer="1"/>
 <wire x1="50.8" y1="35.24" x2="48.895" y2="35.24" width="0.254" layer="1"/>
 <wire x1="48.895" y1="35.24" x2="48.58" y2="35.24" width="0.254" layer="1"/>
-<wire x1="31.49" y1="66.32" x2="35.84" y2="66.32" width="0.254" layer="1"/>
-<wire x1="35.84" y1="66.32" x2="36.83" y2="67.31" width="0.254" layer="1"/>
+<wire x1="36.83" y1="67.31" x2="35.84" y2="66.32" width="0.254" layer="1"/>
 <wire x1="36.83" y1="67.31" x2="36.83" y2="69.705" width="0.254" layer="1"/>
 <wire x1="36.83" y1="69.705" x2="36.975" y2="69.85" width="0.254" layer="1"/>
 <wire x1="36.975" y1="69.85" x2="41.275" y2="69.85" width="0.254" layer="1"/>
 <wire x1="41.275" y1="69.85" x2="41.91" y2="69.85" width="0.254" layer="1"/>
-<wire x1="41.91" y1="69.85" x2="43.815" y2="69.85" width="0.254" layer="1"/>
-<wire x1="43.815" y1="69.85" x2="44.45" y2="69.85" width="0.254" layer="1"/>
 <wire x1="48.26" y1="59.69" x2="48.26" y2="69.215" width="0.254" layer="1"/>
 <wire x1="48.26" y1="69.215" x2="47.625" y2="69.85" width="0.254" layer="1"/>
 <wire x1="47.625" y1="69.85" x2="45.085" y2="69.85" width="0.254" layer="1"/>
-<wire x1="45.085" y1="69.85" x2="43.815" y2="69.85" width="0.254" layer="1"/>
 <wire x1="45.085" y1="72.075" x2="45.085" y2="69.85" width="0.254" layer="1"/>
 <wire x1="41.91" y1="72.075" x2="41.91" y2="69.85" width="0.254" layer="1"/>
 <wire x1="48.58" y1="35.24" x2="48.26" y2="35.56" width="0.254" layer="1"/>
+<wire x1="35.84" y1="66.32" x2="31.49" y2="66.32" width="0.254" layer="1"/>
+<wire x1="41.91" y1="69.85" x2="45.085" y2="69.85" width="0.254" layer="1"/>
 </signal>
 <signal name="N$9">
 <contactref element="X2" pad="3"/>
