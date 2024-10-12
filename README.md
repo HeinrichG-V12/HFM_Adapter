@@ -1,6 +1,6 @@
 # HFM Adapter
 
-## With this adapter it is possible to replace any HLM with any HFM.
+## With this adapter it is possible to replace any HLM with any HFM
 
 ## Development status
 
@@ -16,6 +16,14 @@
 - TI REF02 +5.0v precision voltage reference, +-0.2%
 - Infineon TLE4252D tracking regulator 250mA
 - TI OPA2992 output operation amplifier
+
+### Nucleo-32 modifications
+
+A few changes need to be made to the Nucleo-32 board before it can be used:
+
+- SB1 and SB12 removed (disconnect PA2 and PA3 from T_VCP_TX and T_VCP_RX of ST-Link)
+- SB14 installed (connect PA3 to CN3 Pin 10)
+- SB9 and SB10 installed (connect external 24MHz HSE CLK)
 
 ### Features
 
